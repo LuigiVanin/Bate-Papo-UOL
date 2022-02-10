@@ -32,12 +32,75 @@ header ion-icon {
     font-size: 42px;
 }
 
+.blur {
+    visibility: visible;
+    position: fixed;
+    z-index: 9;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.336);
+    transition: all 0.5s ease-in;
+}
+
+.blur.hidden {
+    visibility: hidden;
+    background-color: transparent;
+    transition: all 0.5s ease-in;
+}
+
+aside {
+    position: fixed;
+    width: 259px;
+    height: 100vh;
+    top: 0;
+    right: 0px;
+    z-index: 10;
+    background-color: white;
+    transition: all 0.5s ease-out;
+    overflow-y: hidden;
+}
+
+aside.hidden {
+    transition: all 0.5s ease-out;
+    right: -259px;
+}
+
+aside h1 {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    padding-block: 25px;
+    margin-inline: 35px;
+}
+
+aside ul {
+    padding-inline: 15px;
+}
+
+aside li {
+    display: flex;
+    padding-bottom: 15px;
+    align-items: center;
+    gap: 7px;
+}
+
+aside li span {
+    padding-top: 5px;
+}
+
+aside li ion-icon {
+    font-size: 26px;
+}
+
 main {
     /* pode ser melhor trocar colocar padding  */
     padding-block: 80px;
     width: 100%;
     min-height: 100vh;
-    /* background-color: red; */
 }
 
 .container {
@@ -58,11 +121,11 @@ p.msg {
     border-radius: 2px;
 }
 
-p.msg.public {
+p.msg.message {
     background-color: white;
 }
 
-p.msg.private {
+p.msg.private_message {
     background-color: #ffdede;
 }
 
