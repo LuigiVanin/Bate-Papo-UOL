@@ -1,7 +1,7 @@
 const messageBody = {
     from: "Salesiano colégio e curso",
     to: "Todos",
-    text: "nada",
+    text: "",
     type: "message",
 };
 
@@ -84,11 +84,6 @@ function keepConnection() {
 }
 
 async function initChat() {
-    const name = { name: messageBody.from };
-    await axios.post(
-        "https://mock-api.driven.com.br/api/v4/uol/participants",
-        name
-    );
     await axios
         .get("https://mock-api.driven.com.br/api/v4/uol/messages")
         .then(updateMessage);
@@ -99,13 +94,15 @@ async function initChat() {
     setInterval(keepConnection, 5000);
 }
 
-// async function getUserName(){
-//     messageBody.from = prompt("Qual é nome do seu usuário?")
-//     const name = { name: messageBody.from };
-//     await axios.post(
-//         "https://mock-api.driven.com.br/api/v4/uol/participants",
-//         name
-//     );
-// }
+function getUserName() {
+    messageBody.from = prompt("Qual é nome do seu usuário?");
+    const name = { name: messageBody.from };
+    let conn = axios.post(
+        "https://mock-api.driven.com.br/api/v4/uol/participants",
+        name
+    );
+    conn.then(initChat);
+    conn.catch(getUserName);
+}
 
-initChat();
+getUserName();
