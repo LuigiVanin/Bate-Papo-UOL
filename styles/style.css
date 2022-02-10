@@ -1,0 +1,140 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f0f0f0e7;
+    min-height: 100vh;
+    position: relative;
+    font-family: "Roboto", sans-serif;
+}
+
+header {
+    width: 100vw;
+    height: 80px;
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 22px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+header img {
+    width: 75px;
+    height: 53px;
+}
+
+header ion-icon {
+    font-size: 42px;
+}
+
+main {
+    /* pode ser melhor trocar colocar padding  */
+    padding-block: 80px;
+    width: 100%;
+    min-height: 100vh;
+    /* background-color: red; */
+}
+
+.container {
+    margin-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+p.msg {
+    width: 100vw;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    padding-inline: 9px;
+    padding-block: 13px;
+    border-radius: 2px;
+}
+
+p.msg.public {
+    background-color: white;
+}
+
+p.msg.private {
+    background-color: #ffdede;
+}
+
+p.msg.status {
+    background-color: #dcdcdc;
+}
+
+p .time {
+    color: #8a8a8a;
+    font-size: 14px;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.text-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 80px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: white;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
+
+    /* padding-inline: 20px; */
+}
+
+.input-box {
+    width: 60%;
+}
+
+.text-box input {
+    outline: none;
+    border: none;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 18px;
+    width: 100%;
+}
+
+.text-box input:focus {
+    font-style: normal;
+}
+
+.text-box p.show {
+    margin-top: 7px;
+    font-size: 13px;
+    font-weight: 100;
+    letter-spacing: 0px;
+    max-width: 100%;
+    color: gray;
+
+    /* three dots  */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.text-box p.hidden {
+    display: none;
+}
+
+.text-box button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.text-box ion-icon {
+    font-size: 26px;
+}
