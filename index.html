@@ -19,7 +19,7 @@
     <aside class="hidden">
         <h1>Escolha um contato para enviar mensagem:</h1>
         <ul class="people">
-            <li class="selected">
+            <li class="selected" data-identifier="participant">
                 <div class="label">
                     <ion-icon name="people"></ion-icon> <span> Todos </span>
 
@@ -32,14 +32,14 @@
         <h1>Escolha a visibilidade:</h1>
 
         <ul class="type">
-            <li class="selected" onclick="changeVisibility('message', this)">
+            <li class="selected" onclick="changeVisibility('message', this)" data-identifier="visibility">
                 <div class="label">
                     <ion-icon name="lock-open"></ion-icon> <span> Público </span>
                 </div>
                 <ion-icon name="checkmark"></ion-icon>
             </li>
 
-            <li onclick="changeVisibility('private_message', this)">
+            <li onclick="changeVisibility('private_message', this)" data-identifier="visibility">
                 <div class="label">
                     <ion-icon name="lock-closed"></ion-icon> <span> Privado </span>
                 </div>
@@ -59,7 +59,7 @@
             <input class="text-field" type="text" placeholder="Escreva aqui...">
             <p class="notification"></p>
         </div>
-        <button onclick="sendMessage()">
+        <button onclick="sendMessage()" data-identifier="send-message">
             <ion-icon name="paper-plane-outline"></ion-icon>
         </button>
 
@@ -67,8 +67,8 @@
 
     <div class="start-screen">
         <img src="./assets/logo2.png" alt="">
-        <input type="text" class="login" placeholder="Digite seu nome...">
-        <button onclick="login()">Entrar</button>
+        <input type="text" class="login" placeholder="Digite seu nome..." data-identifier="enter-name">
+        <button onclick="login()" data-identifier="start">Entrar</button>
     </div>
 
 

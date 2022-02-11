@@ -66,7 +66,7 @@ function renderLiTemplate(name) {
             : "<ion-icon name='person'></ion-icon>";
     const elementClass = messageBody.to === name ? "selected" : "";
     return `
-            <li class="${elementClass}" onclick="changeTargetParticipant('${name}')">
+            <li class="${elementClass}" onclick="changeTargetParticipant('${name}')" data-identifier="participant">
                 <div class="label">
                     ${icon} <span> ${name} </span>
 
@@ -123,9 +123,9 @@ function buidText(msg) {
 function buildMessage(msg) {
     const text = buidText(msg);
     let type = msg.type;
-    if (msg.to === "Todos" && msg.type !== "status") {
-        type = "message";
-    }
+    // if (msg.to === "Todos" && msg.type !== "status") {
+    //     type = "message";
+    // }
 
     if (
         msg.type === "private_message" &&
@@ -139,7 +139,7 @@ function buildMessage(msg) {
     }
 
     html = `
-    <p class="msg ${type}">
+    <p class="msg ${type}" data-identifier="message">
         <span class="time">
             (${msg.time})
         </span>
