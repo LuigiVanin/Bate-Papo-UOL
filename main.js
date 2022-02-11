@@ -4,6 +4,7 @@ const messageBody = {
     text: "",
     type: "message",
 };
+let lastMessage = "";
 
 function setEnterAction() {
     document.addEventListener("keypress", (event) => {
@@ -14,43 +15,22 @@ function setEnterAction() {
     });
 }
 
-function sendMessage() {
-    const textInput = document.querySelector("input");
-    messageBody.text = textInput.value;
+function updateTargetNotification() {
+    const notification = document.querySelector("p.notification");
+    let visStatus =
+        messageBody.type === "private_message" ? "(reservadamente)" : "";
 
-    if (messageBody.to !== "Todos") {
-        messageBody.type = "private_message";
-    } else {
-        messageBody.type = "message";
+    notification.innerHTML = `Enviando para ${messageBody.to}${visStatus}`;
+}
+
+function changeVisibility(option, element) {
+    if (option === messageBody.type) {
+        return;
     }
-    axios
-        .post("https://mock-api.driven.com.br/api/v4/uol/messages", messageBody)
-        .then(getMessages);
-    textInput.value = "";
-}
-
-function buidText(msg) {
-    return msg.to !== "Todos"
-        ? ` reservadamente para <strong>${msg.to}</strong>`
-        : msg.type === "status"
-        ? ""
-        : ":";
-}
-
-function buildMessage(msg) {
-    const text = buidText(msg);
-    const type = msg.to !== "Todos" ? "private_message" : msg.type;
-
-    html = `
-    <p class="msg ${type}">
-        <span class="time">
-            (${msg.time})
-        </span>
-        <span class="text">
-            <strong>${msg.from}${text}</strong> ${msg.text}
-        </span>
-    </p>`;
-    return html;
+    messageBody.type = option;
+    document.querySelector(".type li.selected").classList.remove("selected");
+    element.classList.add("selected");
+    updateTargetNotification();
 }
 
 function toggleSideBar() {
@@ -61,10 +41,11 @@ function toggleSideBar() {
     sideBar.classList.toggle("hidden");
 }
 
-async function changeTargetParticipant(name) {
+function changeTargetParticipant(name) {
     if (messageBody.to === name) return;
     messageBody.to = name;
     getParticipants();
+    updateTargetNotification();
 }
 
 function defaultParticipant() {
@@ -75,6 +56,7 @@ function defaultParticipant() {
         document.querySelector("li").classList.add("selected");
         messageBody.to = "Todos";
     }
+    updateTargetNotification();
 }
 
 function renderLiTemplate(name) {
@@ -94,7 +76,7 @@ function renderLiTemplate(name) {
     `;
 }
 
-function updateSideBar(response) {
+function updateParticipants(response) {
     const data = response.data;
     const participants = document.querySelector("ul.people");
     participants.innerHTML = renderLiTemplate("Todos");
@@ -105,26 +87,89 @@ function updateSideBar(response) {
     defaultParticipant();
 }
 
+function sendMessage() {
+    const textInput = document.querySelector("input.text-field");
+    messageBody.text = textInput.value;
+
+    let men = axios.post(
+        "https://mock-api.driven.com.br/api/v4/uol/messages",
+        messageBody
+    );
+
+    men.then(getMessages);
+    men.catch((err) => {
+        if (err.response.status === 400) {
+            alert(
+                "A mensagem não pode estar vazia ou participante selecionado saiu da sala"
+            );
+        }
+    });
+    textInput.value = "";
+}
+
 function getMessages() {
     axios
         .get("https://mock-api.driven.com.br/api/v4/uol/messages")
-        .then(updateMessage);
+        .then(renderMessages);
 }
 
-function updateMessage(response) {
-    const messages = response.data;
+function buidText(msg) {
+    let private = msg.type === "private_message" ? "reservadamente" : "";
+    return msg.type !== "status"
+        ? ` ${private} para <strong>${msg.to}</strong>: `
+        : " ";
+}
+
+function buildMessage(msg) {
+    const text = buidText(msg);
+    let type = msg.type;
+    if (msg.to === "Todos" && msg.type !== "status") {
+        type = "message";
+    }
+
+    if (
+        msg.type === "private_message" &&
+        !(
+            msg.from === messageBody.from ||
+            msg.to === messageBody.from ||
+            msg.to === "Todos"
+        )
+    ) {
+        return "";
+    }
+
+    html = `
+    <p class="msg ${type}">
+        <span class="time">
+            (${msg.time})
+        </span>
+        <span class="text">
+            <strong>${msg.from}</strong>${text} ${msg.text}
+        </span>
+    </p>`;
+    return html;
+}
+
+function renderMessages(response) {
+    // const messages = ;
     const msgContainer = document.querySelector(".container");
     msgContainer.innerHTML = ``;
-    for (let i = 0; i < messages.length; i++) {
-        msgContainer.innerHTML += buildMessage(messages[i]);
+    for (let i = 0; i < response.data.length; i++) {
+        msgContainer.innerHTML += buildMessage(response.data[i]);
     }
-    // document.querySelectorAll(".msg")[99].scrollIntoView();
+    let message = document.querySelectorAll(".msg");
+    message = message[message.length - 1];
+
+    if (lastMessage != message.innerHTML) {
+        message.scrollIntoView();
+    }
+    lastMessage = message.innerHTML;
 }
 
 function getParticipants() {
     axios
         .get("https://mock-api.driven.com.br/api/v4/uol/participants")
-        .then(updateSideBar);
+        .then(updateParticipants);
 }
 
 function keepConnection() {
@@ -135,11 +180,11 @@ function keepConnection() {
 
 async function initChat() {
     getParticipants();
-    // getMessage()
+    document.querySelector(".start-screen").remove();
     await axios
         .get("https://mock-api.driven.com.br/api/v4/uol/messages")
-        .then(updateMessage);
-    document.querySelectorAll(".msg")[99].scrollIntoView();
+        .then(renderMessages);
+
     setEnterAction();
 
     setInterval(getMessages, 3000);
@@ -147,15 +192,19 @@ async function initChat() {
     setInterval(getParticipants, 10000);
 }
 
-function getUserName() {
-    messageBody.from = prompt("Qual é nome do seu usuário?");
+function login() {
+    messageBody.from = document.querySelector("input.login").value;
     const name = { name: messageBody.from };
     let conn = axios.post(
         "https://mock-api.driven.com.br/api/v4/uol/participants",
         name
     );
     conn.then(initChat);
-    conn.catch(getUserName);
+    conn.catch((err) => {
+        if (err.response.status === 400) {
+            alert(
+                "Nome de usuário já está na sala. Tente outro nome ou espere!"
+            );
+        }
+    });
 }
-
-getUserName();

@@ -31,15 +31,15 @@
 
         <h1>Escolha a visibilidade:</h1>
 
-        <ul class="people">
-            <li class="selected">
+        <ul class="type">
+            <li class="selected" onclick="changeVisibility('message', this)">
                 <div class="label">
                     <ion-icon name="lock-open"></ion-icon> <span> Público </span>
                 </div>
                 <ion-icon name="checkmark"></ion-icon>
             </li>
 
-            <li>
+            <li onclick="changeVisibility('private_message', this)">
                 <div class="label">
                     <ion-icon name="lock-closed"></ion-icon> <span> Privado </span>
                 </div>
@@ -54,15 +54,21 @@
 
     </main>
 
-    <div class="text-box">
+    <footer class="text-box">
         <div class="input-box">
-            <input type="text" placeholder="Escreva aqui...">
-            <p class="hidden">Enviando para Maria (reservadamente)</p>
+            <input class="text-field" type="text" placeholder="Escreva aqui...">
+            <p class="notification"></p>
         </div>
         <button onclick="sendMessage()">
             <ion-icon name="paper-plane-outline"></ion-icon>
         </button>
 
+    </footer>
+
+    <div class="start-screen">
+        <img src="./assets/logo2.png" alt="">
+        <input type="text" class="login" placeholder="Digite seu nome...">
+        <button onclick="login()">Entrar</button>
     </div>
 
 
